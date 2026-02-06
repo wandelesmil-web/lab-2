@@ -1,0 +1,22 @@
+from scapy.all import *
+import time
+
+# CAMBIA ESTO POR TU INTERFAZ REAL
+iface = "ens33"
+
+cdp = (
+    Ether(dst="01:00:0c:cc:cc:cc") /
+    LLC(dsap=0xaa, ssap=0xaa, ctrl=3) /
+    SNAP(OUI=0x00000c, code=0x2000) /
+    Raw(load=b"\x02\x01\x00\x0a\x00\x01\x00\x06Switch")
+)
+
+print("[+] Enviando paquetes CDP en bucle")
+print("[+] Presiona CTRL+C para detener\n")
+
+try:
+    while True:
+        sendp(cdp, iface=iface, verbose=False)
+        time.sleep(1)  # intervalo en segundos
+except KeyboardInterrupt:
+    print("\n[!] Envío detenido por el usuario")
